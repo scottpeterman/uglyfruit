@@ -1,0 +1,9 @@
+# Default-deny. Only commands matching allowed_commands run; denied_commands
+# always wins. '*' globs match anything except the unsafe characters.
+allowed_commands:
+  - show *
+  - display *          # Huawei
+  - get system status  # Fortinet
+denied_commands:
+  - show running-config all
+  - show tech-support *

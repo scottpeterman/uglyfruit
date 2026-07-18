@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1050" font-family="ui-monospace,Menlo,Consolas,monospace">
+<rect width="1500" height="1050" fill="#f2efe7"/>
+<rect x="14" y="14" width="1472" height="1022" fill="none" stroke="#c9c3b4" stroke-width="1"/>
+<path d="M 520 946 L 520 225 L 135 225" fill="none" stroke="#8b8678" stroke-width="1.3" stroke-dasharray="6 5" opacity="0.9"/>
+<text x="328" y="586" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">devices + liveness</text>
+<path d="M 190 946 L 190 780 L 180 780" fill="none" stroke="#8b8678" stroke-width="1.3" stroke-dasharray="6 5" opacity="0.9"/>
+<text x="185" y="863" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">snapshots</text>
+<path d="M 520 946 L 520 780 L 180 780" fill="none" stroke="#8b8678" stroke-width="1.3" stroke-dasharray="6 5" opacity="0.9"/>
+<text x="350" y="863" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">resolve id</text>
+<path d="M 190 946 L 190 780 L 860 780" fill="none" stroke="#33322d" stroke-width="1.3" opacity="0.9"/>
+<text x="525" y="863" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">SOT: /nodes inventory · name parity</text>
+<path d="M 500 780 L 500 240 L 609 240" fill="none" stroke="#33322d" stroke-width="1.3" opacity="0.9"/>
+<text x="554" y="510" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">broker feed · determine_all</text>
+<path d="M 500 780 L 500 240 L 857 240" fill="none" stroke="#8b8678" stroke-width="1.3" stroke-dasharray="6 5" opacity="0.9"/>
+<text x="678" y="510" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">ambient · read-only context (below the bou</text>
+<path d="M 500 780 L 500 946 L 860 946" fill="none" stroke="#33322d" stroke-width="1.3" opacity="0.9"/>
+<text x="680" y="863" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">one login · fixed reads · read-only</text>
+<path d="M 373 240 L 373 946 L 860 946" fill="none" stroke="#33322d" stroke-width="1.3" opacity="0.9"/>
+<text x="616" y="593" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">own SSH · ungated</text>
+<path d="M 857 396 L 857 240 L 857 240" fill="none" stroke="#8b8678" stroke-width="1.3" stroke-dasharray="6 5" opacity="0.9"/>
+<text x="857" y="318" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">chat + tool loop</text>
+<path d="M 857 240 L 857 570 L 790 570" fill="none" stroke="#33322d" stroke-width="1.3" opacity="0.9"/>
+<text x="824" y="405" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">every tool call · coord.step() (the chokep</text>
+<path d="M 790 570 L 790 651 L 790 651" fill="none" stroke="#33322d" stroke-width="1.3" opacity="0.9"/>
+<text x="790" y="610" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">on human grant → open transport</text>
+<path d="M 790 651 L 790 780 L 860 780" fill="none" stroke="#33322d" stroke-width="1.3" opacity="0.9"/>
+<text x="825" y="716" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">dispatch send_show_command · MCP (streamab</text>
+<path d="M 790 570 L 790 570 L 427 570" fill="none" stroke="#33322d" stroke-width="1.3" opacity="0.9"/>
+<text x="608" y="570" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">grant posture</text>
+<path d="M 860 780 L 860 946 L 860 946" fill="none" stroke="#33556e" stroke-width="1.3" opacity="0.9"/>
+<text x="860" y="863" fill="#1b1b18" font-size="10" text-anchor="middle" dy="-2">SSH · allow-list = command gate</text>
+<text x="48" y="34" fill="#1b1b18" font-size="17" font-weight="400" text-anchor="start">uglyfruit — tiered network investigation · Tier 1 / 1.5 / 2 · gate INTERPOSED, gated run</text>
+<text x="48" y="57" fill="#1b1b18" font-size="17" font-weight="400" text-anchor="start">gear-proven</text>
+<rect x="40.0" y="80.0" width="980.0" height="250.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="48" y="103" fill="#1b1b18" font-size="13" font-weight="700" text-anchor="start">COCKPIT SHELL · PyQt6</text>
+<rect x="60.0" y="140.0" width="150.0" height="170.0" rx="6" fill="#f7f5ef" stroke="#a8a294" stroke-width="1.3"/>
+<text x="68" y="162" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="start">SESSION TREE</text>
+<text x="68" y="178" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">devices grouped</text>
+<text x="68" y="194" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">liveness dot</text>
+<text x="68" y="211" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">(from Netlapse</text>
+<text x="68" y="227" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">identity)</text>
+<rect x="240.0" y="128.0" width="760.0" height="190.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="248" y="150" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="start">DEVICE TAB · one per open device</text>
+<rect x="262.0" y="176.0" width="222.0" height="128.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="270" y="198" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="start">TERMINAL pane</text>
+<text x="270" y="214" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">INTERACTIVE posture</text>
+<text x="270" y="230" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">own SSH shell</text>
+<text x="270" y="247" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">UNGATED — you own the CLI</text>
+<rect x="498.0" y="176.0" width="222.0" height="128.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="506" y="198" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="start">TELEMETRY pane</text>
+<text x="506" y="214" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">Tier 1.5 HUD</text>
+<text x="506" y="230" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">broker feed → widgets</text>
+<text x="506" y="247" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">PRESENT / ABSENT / UNREAD</text>
+<rect x="734.0" y="176.0" width="246.0" height="128.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="742" y="198" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="start">INVESTIGATION pane</text>
+<text x="742" y="214" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">LLM drives the gradient</text>
+<text x="742" y="230" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">every tool call → coord.step()</text>
+<text x="742" y="247" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">GATED · TABLES = from-source</text>
+<text x="742" y="263" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">render</text>
+<rect x="734.0" y="360.0" width="246.0" height="72.0" rx="6" fill="#f7f5ef" stroke="#a8a294" stroke-width="1.3"/>
+<text x="857" y="384" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="middle">Ollama · local LLM</text>
+<text x="857" y="400" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="middle">0.0.0.0:11434 · tool-capable</text>
+<text x="857" y="416" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="middle">model</text>
+<rect x="240.0" y="472.0" width="740.0" height="210.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="248" y="494" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="start">SessionCoordinator · one per tab</text>
+<text x="248" y="510" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">owns DeviceSessions + GateSession + the bridge · caches the 1.5 feed as ambient</text>
+<rect x="262.0" y="522.0" width="330.0" height="96.0" rx="6" fill="#f7f5ef" stroke="#a8a294" stroke-width="1.3"/>
+<text x="270" y="544" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="start">DeviceSessions</text>
+<text x="270" y="560" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">physical connections</text>
+<text x="270" y="576" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">3 postures: interactive · broker · gated</text>
+<rect x="620.0" y="522.0" width="340.0" height="96.0" rx="6" fill="#f7f5ef" stroke="#9c3a2f" stroke-width="1.3"/>
+<text x="628" y="544" fill="#9c3a2f" font-size="12" font-weight="700" text-anchor="start">GateSession — THE GATE</text>
+<text x="628" y="560" fill="#9c3a2f" font-size="12" font-weight="400" text-anchor="start">withhold · refuse · grant</text>
+<text x="628" y="576" fill="#9c3a2f" font-size="12" font-weight="400" text-anchor="start">model asks · human grants (Qt modal) ·</text>
+<text x="628" y="593" fill="#9c3a2f" font-size="12" font-weight="400" text-anchor="start">fail-closed</text>
+<rect x="620.0" y="632.0" width="340.0" height="38.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="790" y="647" fill="#1b1b18" font-size="11" font-weight="700" text-anchor="middle">MCP BRIDGE · lazy-open on grant · tab-lived ·</text>
+<text x="790" y="662" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="middle">uf/cockpit/bridge.py</text>
+<rect x="40.0" y="700.0" width="280.0" height="160.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="48" y="722" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="start">TIER 1 — HISTORICAL</text>
+<text x="48" y="738" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start"></text>
+<text x="48" y="754" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">&quot;what changed since before?&quot;</text>
+<text x="48" y="771" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">Netlapse snapshot / diff</text>
+<text x="48" y="787" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">zero device contact</text>
+<text x="48" y="803" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">capability enum from Netlapse</text>
+<text x="48" y="819" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">uf/servers/tier1_netlapse.py</text>
+<rect x="350.0" y="700.0" width="300.0" height="160.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="358" y="722" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="start">TIER 1.5 — STRUCTURED-LIVE</text>
+<text x="358" y="738" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start"></text>
+<text x="358" y="754" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">&quot;is it healthy right now?&quot;</text>
+<text x="358" y="771" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">broker: one login, fixed reads</text>
+<text x="358" y="787" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">read-only by construction</text>
+<text x="358" y="803" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">Arista + Juniper · gear-proven</text>
+<text x="358" y="819" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">uf/core (law·contract·vendors)</text>
+<rect x="700.0" y="700.0" width="320.0" height="160.0" rx="6" fill="#f7f5ef" stroke="#33556e" stroke-width="1.3"/>
+<text x="708" y="722" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="start">TIER 2 — ARBITRARY-LIVE · GATED</text>
+<text x="708" y="738" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start"></text>
+<text x="708" y="754" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">&quot;run this specific command&quot;</text>
+<text x="708" y="771" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">mcpssh · separate process</text>
+<text x="708" y="787" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">own creds + audit + allow-list</text>
+<text x="708" y="803" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">inventory from Netlapse (SOT)</text>
+<text x="708" y="819" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="start">reached over MCP · uf/mcpssh</text>
+<text x="846" y="782" fill="#9c3a2f" font-size="11" font-weight="400" text-anchor="middle">TRUST BOUNDARY — the escalation gate owns this</text>
+<rect x="40.0" y="900.0" width="300.0" height="92.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="190" y="934" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="middle">Netlapse — SINGLE SOT</text>
+<text x="190" y="950" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="middle">historical snapshots + /nodes identity</text>
+<text x="190" y="966" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="middle">git-backed dual artifact</text>
+<rect x="370.0" y="900.0" width="300.0" height="92.0" rx="6" fill="#f7f5ef" stroke="#a8a294" stroke-width="1.3"/>
+<text x="520" y="926" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="middle">IdentityResolver</text>
+<text x="520" y="942" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="middle">joins identity across tiers</text>
+<text x="520" y="958" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="middle">name/full_name from /nodes — same key</text>
+<text x="520" y="975" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="middle">mcpssh uses</text>
+<rect x="700.0" y="900.0" width="320.0" height="92.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="860" y="934" fill="#1b1b18" font-size="12" font-weight="700" text-anchor="middle">NETWORK GEAR — live devices</text>
+<text x="860" y="950" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="middle">Arista EOS · Juniper Junos</text>
+<text x="860" y="966" fill="#1b1b18" font-size="12" font-weight="400" text-anchor="middle">SITE-A / SITE-B / SITE-C</text>
+<rect x="1060.0" y="80.0" width="360.0" height="150.0" rx="6" fill="#f7f5ef" stroke="#a8a294" stroke-width="1.3"/>
+<text x="1068" y="101" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">LEGEND</text>
+<text x="1068" y="116" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">── ink solid proven / live path</text>
+<text x="1068" y="131" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">·· grey dashed data / read path</text>
+<text x="1068" y="146" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">▮ red border trust boundary / escalation gate</text>
+<text x="1068" y="160" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">▮ blue border command gate (mcpssh allow-list)</text>
+<rect x="1060.0" y="250.0" width="360.0" height="210.0" rx="6" fill="#f7f5ef" stroke="#a8a294" stroke-width="1.3"/>
+<text x="1068" y="271" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">TWO INDEPENDENT GATES (the build&#x27;s correction)</text>
+<text x="1068" y="286" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start"></text>
+<text x="1068" y="301" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">1 · ESCALATION gate — host / GateSession</text>
+<text x="1068" y="316" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">who may reach Tier 2. Model asks,</text>
+<text x="1068" y="330" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">human grants at the modal, else fail-closed.</text>
+<text x="1068" y="345" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start"></text>
+<text x="1068" y="360" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">2 · COMMAND gate — mcpssh allow-list</text>
+<text x="1068" y="375" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">which commands run. Default-deny,</text>
+<text x="1068" y="390" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">in mcpssh&#x27;s own process.</text>
+<text x="1068" y="405" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start"></text>
+<text x="1068" y="420" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">Ungating one never ungates the other.</text>
+<rect x="1060.0" y="480.0" width="360.0" height="186.0" rx="6" fill="#f7f5ef" stroke="#3c3b36" stroke-width="1.3"/>
+<text x="1068" y="501" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">WHERE IT STANDS</text>
+<text x="1068" y="516" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start"></text>
+<text x="1068" y="531" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">✓ GATED loop gear-proven end to end:</text>
+<text x="1068" y="546" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">model → gate → (approve) → mcpssh → gear</text>
+<text x="1068" y="560" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">✓ the negative held: no Tier 2 until a human grant</text>
+<text x="1068" y="575" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">✓ single SOT: Netlapse feeds all tiers incl. mcpssh</text>
+<text x="1068" y="590" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">✓ Tier 1.5 gear-proven, 2 vendors · ambient context</text>
+<text x="1068" y="605" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start"></text>
+<text x="1068" y="620" fill="#1b1b18" font-size="11" font-weight="400" text-anchor="start">▸ NEXT: render Tier 1/2 results from source</text>
+</svg>

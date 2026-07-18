@@ -1,0 +1,1 @@
+"""uf.cockpit.panes — the Qt panes that bind to a SessionCoordinator."""

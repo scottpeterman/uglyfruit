@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>uf — interactive console</title>
+<link rel="stylesheet" href="vendor/xterm/xterm.css">
+<style>
+/* palette tokens lifted from nethuds.html so the terminal reads as one surface
+   with the HUD — same phosphor green on the same near-black, same scanline veil. */
+:root{
+  --bg:#060a06; --pri:#2ee66a; --pri-mid:#1f9c4a; --pri-dim:#166b34;
+  --pri-faint:#0f3d20; --amber:#f5b324; --red:#ff3b3b;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--pri);font-family:var(--mono);overflow:hidden;
+  display:flex;flex-direction:column}
+
+/* thin status strip — mirrors the placeholder's "UNGATED — you own the CLI" line */
+.bar{flex:0 0 auto;display:flex;align-items:center;gap:10px;
+  padding:5px 10px;border-bottom:1px solid var(--pri-faint);
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--pri-dim)}
+.bar .tag{color:var(--pri);text-shadow:0 0 4px rgba(46,230,106,.45)}
+.bar .dot{width:7px;height:7px;border-radius:50%;background:var(--pri-dim);
+  box-shadow:0 0 4px currentColor}
+.bar.up   .dot{background:var(--pri)}
+.bar.down .dot{background:var(--red)}
+.bar.wait .dot{background:var(--amber)}
+.bar .state{margin-left:auto;color:var(--pri-mid);letter-spacing:.1em}
+
+/* terminal host — xterm paints here; padding gives the glyphs a little air */
+#term{flex:1 1 auto;min-height:0;padding:6px 8px}
+
+/* scanline veil, identical recipe to the HUD, so both panes share the CRT feel */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,
+    rgba(0,20,0,.16) 3px,rgba(0,20,0,.16) 3px);mix-blend-mode:multiply}
+
+/* keep xterm's own viewport transparent so our --bg + scanlines show through */
+.xterm,.xterm-viewport{background:transparent!important}
+.xterm-viewport::-webkit-scrollbar{width:8px}
+.xterm-viewport::-webkit-scrollbar-thumb{background:var(--pri-faint);border-radius:2px}
+</style>
+</head>
+<body>
+  <div class="bar wait" id="bar">
+    <span class="dot"></span>
+    <span class="tag">TERMINAL</span>
+    <span>interactive shell · ungated — you own the CLI</span>
+    <span class="state" id="state">connecting…</span>
+  </div>
+  <div id="term"></div>
+
+  <!-- vendored, not CDN: the cockpit runs on a lab box over VPN with no
+       assumption of outbound internet. Everything the page needs is on disk. -->
+  <script src="vendor/xterm/xterm.js"></script>
+  <script src="vendor/xterm/addon-fit.js"></script>
+  <!-- window.QWebChannel is injected by ConsolePane at document-creation, in the
+       main world, straight from the Qt resource — so it is defined and
+       version-matched to the running PyQt6 before this script executes. No file,
+       no qrc:// cross-scheme fetch, works even if the package dir is read-only. -->
+  <script>
+  (function () {
+    const barEl   = document.getElementById('bar');
+    const stateEl = document.getElementById('state');
+    function setStatus(cls, text) {
+      barEl.className = 'bar ' + cls;
+      stateEl.textContent = text;
+    }
+
+    // xterm themed to the cockpit palette. Colours chosen so device output
+    // (BGP states, interface flaps) reads in-band with the HUD's own language:
+    // green = good, amber = attention, red = down.
+    const term = new Terminal({
+      fontFamily: "'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace",
+      fontSize: 13,
+      lineHeight: 1.15,
+      cursorBlink: true,
+      cursorStyle: 'block',
+      scrollback: 5000,
+      theme: {
+        background:    '#060a06',
+        foreground:    '#2ee66a',
+        cursor:        '#2ee66a',
+        cursorAccent:  '#060a06',
+        selectionBackground: '#0f3d20',
+        black:   '#060a06', brightBlack:   '#166b34',
+        red:     '#ff3b3b', brightRed:     '#ff6b6b',
+        green:   '#2ee66a', brightGreen:   '#7dffab',
+        yellow:  '#f5b324', brightYellow:  '#ffcf5c',
+        blue:    '#28d7e6', brightBlue:    '#6ceaf5',
+        magenta: '#b98cff', brightMagenta: '#d3b6ff',
+        cyan:    '#1f9c4a', brightCyan:    '#2ee66a',
+        white:   '#c8f5d8', brightWhite:   '#ffffff',
+      },
+    });
+
+    const fit = new FitAddon.FitAddon();
+    term.loadAddon(fit);
+    term.open(document.getElementById('term'));
+
+    // ── the bridge: QWebChannel object registered by ConsolePane as "bridge" ──
+    // Py -> JS : bridge.output(str)  device bytes  -> term.write
+    //            bridge.status(str)  connection state -> the strip
+    // JS -> Py : bridge.send(str)        keystrokes
+    //            bridge.resize(c, r)     PTY follows the pane
+    //            bridge.notifyReady()    "page is up, start the SSH connect"
+    new QWebChannel(qt.webChannelTransport, function (channel) {
+      const bridge = channel.objects.bridge;
+
+      bridge.output.connect(function (data) { term.write(data); });
+      bridge.status.connect(function (msg) {
+        // msg is "cls|text"; cls in {wait, up, down}
+        const i = msg.indexOf('|');
+        setStatus(msg.slice(0, i), msg.slice(i + 1));
+      });
+
+      // user keystrokes -> the box
+      term.onData(function (data) { bridge.send(data); });
+
+      // PTY tracks the pane: fit to the box, tell the box the new geometry
+      function sizeToPane() {
+        try { fit.fit(); } catch (e) { /* pane not laid out yet */ }
+        bridge.resize(term.cols, term.rows);
+      }
+      const ro = new ResizeObserver(function () {
+        // debounce a touch — resize storms during splitter drags are cheap to coalesce
+        window.clearTimeout(window.__fitT);
+        window.__fitT = window.setTimeout(sizeToPane, 60);
+      });
+      ro.observe(document.getElementById('term'));
+
+      // First fit, then tell Python the terminal can receive bytes. The SSH
+      // connect is deferred until now so no output can race ahead of a page
+      // that isn't ready to paint it.
+      sizeToPane();
+      term.focus();
+      bridge.notifyReady();
+    });
+  })();
+  </script>
+</body>
+</html>

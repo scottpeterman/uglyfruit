@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nethuds — tier 1.5 widget slice</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
+/* tokens lifted verbatim from the cockpit mockup — the brief's own palette */
+:root{
+  --bg:#060a06; --bg-rail:#080e08; --bg-panel:#0a130c; --bg-sunk:#050805;
+  --pri:#2ee66a; --pri-mid:#1f9c4a; --pri-dim:#166b34; --pri-faint:#0f3d20;
+  --amber:#f5b324; --amber-dim:#7a5b14; --red:#ff3b3b; --absent:#355c40;
+  --glow:0 0 4px rgba(46,230,106,.45);
+  --glow-amber:0 0 5px rgba(245,179,36,.5);
+  --glow-red:0 0 5px rgba(255,59,59,.55);
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  /* hud/widgets/lldp radar tokens — edge accent contrasts the green leaf tier */
+  --hud-edge:#28d7e6; --hud-edge-link:rgba(40,215,230,.30); --hud-edge-text:rgba(40,215,230,.62);
+  --hud-leaf-link:rgba(46,230,106,.16); --hud-ring:#103a22;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--pri);font-family:var(--mono);font-size:13px;
+  line-height:1.45;letter-spacing:.02em;padding:18px;overflow-y:auto}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,
+    rgba(0,20,0,.16) 3px,rgba(0,20,0,.16) 3px);mix-blend-mode:multiply}
+
+/* header: device id + capability chips (chip presence = capabilities(); color = state) */
+.head{display:flex;align-items:center;gap:16px;padding:8px 4px 14px;border-bottom:1px solid var(--pri-faint);margin-bottom:16px;flex-wrap:wrap}
+.dev-id{font-weight:700;font-size:16px;letter-spacing:.14em;text-shadow:var(--glow)}
+.dev-meta{color:var(--pri-dim);font-size:11px}
+.dev-meta b{color:var(--pri-mid);font-weight:500}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-left:6px}
+.chip{font-size:10px;letter-spacing:.08em;padding:2px 7px;border:1px solid var(--pri-faint);
+  border-radius:2px;color:var(--pri-mid);text-transform:uppercase}
+.chip.present{color:var(--pri);border-color:var(--pri-dim);text-shadow:var(--glow)}
+.chip.absent{color:var(--absent);border-color:#1a2a1f;text-decoration:line-through;opacity:.7}
+.chip.unread{color:var(--amber);border-color:var(--amber-dim);text-shadow:var(--glow-amber)}
+
+/* the demo driver — not part of hud/, deleted when wired to WS/QWebChannel */
+.driver{margin-left:auto;display:flex;gap:14px;align-items:center;font-size:10px;color:var(--pri-dim)}
+.driver .grp{display:flex;gap:4px;align-items:center}
+.driver b{color:var(--pri-mid);letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.driver button{font-family:var(--mono);font-size:9px;letter-spacing:.08em;cursor:pointer;
+  background:var(--bg-sunk);color:var(--pri-dim);border:1px solid var(--pri-faint);
+  border-radius:2px;padding:3px 6px;text-transform:uppercase}
+.driver button.on{color:var(--pri);border-color:var(--pri-dim);text-shadow:var(--glow)}
+.driver button.on.absent{color:var(--absent);border-color:#24402c;text-shadow:none}
+.driver button.on.unread{color:var(--amber);border-color:var(--amber-dim);text-shadow:var(--glow-amber)}
+
+/* ── hud/shell.css : the panel + state chip, shared by every widget ── */
+.telemetry{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;align-content:start}
+.span2{grid-column:1/-1}
+.panel{border:1px solid var(--pri-faint);background:var(--bg-panel);border-radius:2px;
+  display:flex;flex-direction:column;transition:border-color .2s}
+.panel.unread{border-color:var(--amber-dim)}
+.panel-title{font-size:10px;letter-spacing:.2em;color:var(--pri);text-transform:uppercase;
+  padding:7px 11px 6px;border-bottom:1px solid var(--pri-faint);display:flex;align-items:center;
+  gap:8px;text-shadow:var(--glow)}
+.panel.unread .panel-title{color:var(--amber);text-shadow:var(--glow-amber);border-bottom-color:var(--amber-dim)}
+.panel-title .age{color:var(--pri-faint);font-size:9px;letter-spacing:.06em}
+.panel-title .state{margin-left:auto;font-size:9px;letter-spacing:.14em;padding:1px 6px;border-radius:2px}
+.state.present{color:var(--pri);border:1px solid var(--pri-dim)}
+.state.absent{color:var(--absent);border:1px solid #233}
+.state.unread{color:var(--amber);border:1px solid var(--amber-dim);text-shadow:var(--glow-amber)}
+.panel-body{padding:11px;flex:1}
+
+/* shared ABSENT body — device positively answered "none" */
+.absent-body{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;padding:22px 11px;text-align:center;min-height:96px}
+.absent-body .mark{font-size:11px;color:var(--absent);letter-spacing:.05em}
+.absent-body .why{font-size:10px;color:#2a4030}
+.absent-body .seal{font-size:10px;color:#1f6b34}
+
+/* shared UNREAD body — read failed; amber hatch; explicitly not a reading */
+.unread-body{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:7px;padding:20px 11px;text-align:center;min-height:96px;
+  background:repeating-linear-gradient(45deg,transparent,transparent 7px,
+    rgba(245,179,36,.05) 7px,rgba(245,179,36,.05) 14px)}
+.unread-body .mark{font-size:12px;color:var(--amber);letter-spacing:.1em;text-shadow:var(--glow-amber)}
+.unread-body .why{font-size:10px;color:var(--amber-dim)}
+.unread-body .why b{color:var(--amber)}
+
+/* ── hud/primitives.css : frame-bar + table, composed by PRESENT bodies ── */
+.frame-row{display:grid;grid-template-columns:120px 1fr 96px;gap:9px;align-items:center;margin:6px 0;font-size:11px}
+.frame-label{color:var(--pri-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.frame-track{height:9px;background:var(--bg-sunk);border:1px solid var(--pri-faint);position:relative;border-radius:1px}
+.frame-fill{position:absolute;top:0;left:0;bottom:0;background:var(--pri);opacity:.55}
+.frame-fill.warn{background:var(--amber)} .frame-fill.crit{background:var(--red)}
+.frame-tick{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--pri);box-shadow:var(--glow)}
+.frame-tick.warn{background:var(--amber);box-shadow:var(--glow-amber)}
+.frame-tick.crit{background:var(--red);box-shadow:var(--glow-red)}
+.frame-val{text-align:right;color:var(--pri);font-weight:600}
+.frame-val.warn{color:var(--amber);text-shadow:var(--glow-amber)}
+.frame-val.crit{color:var(--red);text-shadow:var(--glow-red)}
+.frame-val .ceil{color:#2a4030;font-weight:400;font-size:10px}
+.frame-row.zero .frame-track{border-style:dashed}     /* must-be-zero frame */
+
+.tbl{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+.tbl th{text-align:left;color:var(--pri-dim);font-weight:500;font-size:9px;letter-spacing:.1em;
+  padding:3px 6px;border-bottom:1px solid var(--pri-faint)}
+.tbl td{padding:3px 6px;color:var(--pri-mid)} .tbl td.r{text-align:right}
+.tbl th.r{text-align:right} .tbl td.r,.tbl th.r{white-space:nowrap}
+.tbl tr.crit td{color:var(--red)} .tbl tr.crit .pstate{color:var(--red);text-shadow:var(--glow-red)}
+.pstate.up{color:var(--pri)}
+.tbl .sub{display:block;font-size:9px;color:var(--pri-dim);opacity:.8;margin-top:1px;letter-spacing:.03em}
+.tbl tr.crit .sub{color:var(--red);opacity:.65}
+.summary-line{font-size:11px;color:var(--pri-dim);margin-bottom:2px}
+.summary-line b{color:var(--pri);text-shadow:var(--glow);font-size:13px}
+.summary-line b.crit{color:var(--red);text-shadow:var(--glow-red)}
+/* hud/widgets/transceivers chrome — slot strip + inventory grid (ported renderTransceiverInventory) */
+.port-slot{display:inline-flex;align-items:center;justify-content:center;width:18px;height:14px;margin:1px;font-size:7px;border-radius:1px;cursor:default;border:1px solid var(--pri-faint)}
+.port-slot.active{border-color:var(--pri-mid);background:color-mix(in srgb,var(--pri) 12%,transparent);color:var(--pri)}
+.port-slot.empty{border-color:var(--pri-faint);background:color-mix(in srgb,var(--pri-faint) 15%,transparent);color:var(--pri-faint)}
+.port-slot:hover{outline:1px solid var(--pri-dim);z-index:1}
+.xcvr-strip{margin:8px 0 6px;line-height:1}
+.xcvr-scroll{max-height:150px;overflow-y:auto}
+.xcvr-model{color:var(--pri-mid)} .xcvr-serial{color:var(--pri-dim)} .xcvr-mfg{color:var(--pri-dim);font-size:9px}
+.xcvr-empty{color:var(--pri-dim);font-size:11px;padding:6px 0}
+/* themed scrollbars — shell chrome, graduated now that a second scroll pane
+   wants it (env-scroll was first, transceivers second). WebEngine is Chromium,
+   so ::-webkit-scrollbar drives it; scrollbar-* is the Firefox fallback. Thin,
+   sunken track, dim-green thumb that brightens on hover — reads as terminal. */
+*{scrollbar-width:thin;scrollbar-color:var(--pri-faint) var(--bg-sunk)}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:var(--bg-sunk)}
+::-webkit-scrollbar-thumb{background:var(--pri-faint);border:1px solid var(--bg-sunk);border-radius:1px}
+::-webkit-scrollbar-thumb:hover{background:var(--pri-dim)}
+::-webkit-scrollbar-corner{background:var(--bg-sunk)}
+/* hud/widgets/proc (COMPUTE) chrome — gauge donuts + breakdown (ported renderCompute) */
+.compute-gauges{display:flex;gap:12px;align-items:center;margin:8px 0 9px}
+.gauge{flex-shrink:0}
+.gauge-dash{width:56px;height:56px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;color:var(--pri-dim);border:1px dashed var(--pri-faint);border-radius:50%}
+.compute-brk{font-size:10px;color:var(--pri-dim);margin-bottom:5px;letter-spacing:.02em}
+.compute-ram{font-size:11px;color:var(--pri-dim);margin-bottom:5px}
+.compute-ram b{color:var(--pri);text-shadow:var(--glow)}
+.compute-proc{border-top:1px solid var(--pri-faint);margin-top:4px;padding-top:3px}
+.compute-proc .tbl{margin-top:2px} .compute-proc .tbl td b{color:var(--pri)}
+.compute-dim{color:var(--pri-dim);font-size:11px}
+.note{font-size:9px;color:#2a4030;margin-top:10px;letter-spacing:.04em;border-top:1px dashed var(--pri-faint);padding-top:8px}
+.note b{color:var(--pri-dim)}
+
+/* ── hud/primitives.css : tabs + status dot (shared sub-view chrome) ── */
+.tabs{display:flex;gap:6px;align-items:center;margin-bottom:10px}
+.tabs button{font-family:var(--mono);font-size:9px;letter-spacing:.12em;cursor:pointer;
+  background:var(--bg-sunk);color:var(--pri-dim);border:1px solid var(--pri-faint);
+  border-radius:2px;padding:3px 10px;text-transform:uppercase}
+.tabs button.on{color:var(--pri);border-color:var(--pri-dim);text-shadow:var(--glow)}
+.tabs-meta{margin-left:auto;font-size:9px;letter-spacing:.08em;color:var(--pri-dim);text-transform:uppercase}
+.tabs-meta b{color:var(--pri);text-shadow:var(--glow)} .tabs-meta b.crit{color:var(--red);text-shadow:var(--glow-red)}
+.pane{display:none}
+.pane.active{display:block;animation:fadeIn .18s ease}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:7px;vertical-align:middle}
+.dot-ok{background:var(--pri);box-shadow:var(--glow)}
+.dot-err{background:var(--red);box-shadow:var(--glow-red)}
+.dot-blink{animation:blink 1.3s infinite}
+@keyframes radarSweep{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(2px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+/* hud/widgets/lldp radar chrome */
+.lldp-radar-wrap{text-align:center;padding:2px 0 4px}
+.lldp-radar{font-family:var(--mono)}
+.lldp-empty{text-align:center;color:var(--pri-dim);padding:26px;letter-spacing:.08em}
+/* hud/widgets/interfaces active-view chrome */
+.if-port b{color:var(--pri);font-weight:700}
+.if-desc{color:var(--pri-dim);font-size:10px}
+.if-type{color:#2a4030;font-size:10px}
+/* hud/widgets/environment chrome — thermal heatmap + power/cooling */
+.env-heat{padding:2px 0}
+.therm-grid{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px}
+.therm-cell{width:30px;height:24px;display:flex;align-items:center;justify-content:center;
+  font-size:11px;border-radius:2px;border:1px solid var(--pri-faint);background:var(--bg-sunk);color:var(--pri-dim)}
+.therm-cell.ok{color:var(--pri);border-color:var(--pri-dim);background:rgba(46,230,106,.06)}
+.therm-cell.warn{color:var(--amber);border-color:var(--amber-dim);background:rgba(245,179,36,.12)}
+.therm-cell.crit{color:#fff;border-color:var(--red);background:rgba(255,59,59,.24);animation:blink 2s infinite}
+.env-max{font-size:10px;color:var(--pri-dim);letter-spacing:.06em}
+.env-max b{color:var(--pri);text-shadow:var(--glow)}
+.env-scroll{max-height:230px;overflow-y:auto}
+.env-srow{display:grid;grid-template-columns:150px 1fr 86px;gap:9px;align-items:center;margin:4px 0;font-size:11px}
+.env-slabel{color:var(--pri-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.env-track{position:relative;height:8px;background:var(--bg-sunk);border:1px solid var(--pri-faint);border-radius:1px}
+.env-fill{position:absolute;left:0;top:0;bottom:0;background:var(--pri);opacity:.55}
+.env-fill.warn{background:var(--amber)} .env-fill.crit{background:var(--red);opacity:.7}
+.env-mark{position:absolute;top:-2px;bottom:-2px;width:1px;background:color-mix(in srgb,var(--amber) 55%,transparent)}
+.env-sval{text-align:right;color:var(--pri);font-weight:600;white-space:nowrap}
+.env-sval.warn{color:var(--amber)} .env-sval.crit{color:var(--red);text-shadow:var(--glow-red)}
+.env-sval .env-crit{color:#2a4030;font-weight:400;font-size:10px}
+.psu-row{display:grid;grid-template-columns:92px 1fr auto auto;gap:14px;align-items:center;
+  font-size:11px;padding:5px 0;border-bottom:1px solid var(--pri-faint)}
+.psu-id{color:var(--pri)} .psu-model{color:var(--pri-dim);font-size:10px;white-space:nowrap}
+.psu-w{white-space:nowrap} .psu-w b{color:var(--pri);text-shadow:var(--glow)}
+.psu-a{font-size:10px;color:var(--pri-mid);white-space:nowrap;text-align:right}
+.env-total{margin-top:7px;font-size:12px} .env-total b{color:var(--pri);text-shadow:var(--glow)}
+.env-fans{margin-top:9px;display:flex;flex-wrap:wrap;gap:11px;align-items:center;font-size:10px;color:var(--pri-mid)}
+.env-fans .fan{white-space:nowrap}
+.env-amb{margin-top:9px;font-size:11px;color:var(--pri-mid)} .env-amb b{color:var(--pri);text-shadow:var(--glow)}
+.env-bad{color:var(--red);text-shadow:var(--glow-red)}
+.env-dim{color:var(--pri-dim);font-size:9px;letter-spacing:.06em}
+.env-empty{text-align:center;color:var(--pri-dim);padding:22px;letter-spacing:.06em}
+
+/* nameplate — populated by widgets/version.js via #nameplate / #np-host */
+.dev-meta .np-dim{color:var(--pri-dim)}
+.dev-meta .np-model,.dev-meta .np-eos,.dev-meta .np-field{margin-right:12px}
+.dev-meta.np-unread{color:var(--amber);text-shadow:var(--glow-amber)}
+.dev-meta .np-mark{color:var(--amber);font-weight:600}
+.dev-meta .np-why{color:var(--pri-dim);margin-left:8px}
+</style>
+</head>
+<body>
+
+<header class="head">
+  <span class="dev-id" id="np-host"></span>
+  <span class="dev-meta" id="nameplate"></span>
+  <div class="chips" id="chips"></div>
+  <div class="driver" id="driver"></div>
+</header>
+
+<div class="telemetry" id="telemetry"></div>
+
+<script src="primitives.js"></script>
+<script src="widgets/bgp.js"></script>
+<script src="widgets/ospf.js"></script>
+<script src="widgets/lldp.js"></script>
+<script src="widgets/interfaces.js"></script>
+<script src="widgets/environment.js"></script>
+<script src="widgets/optics.js"></script>
+<script src="widgets/transceivers.js"></script>
+<script src="widgets/proc.js"></script>
+<script src="widgets/routes.js"></script>
+<script src="widgets/version.js"></script>
+<script src="shell.js"></script>
+<script src="cockpit.js"></script>
+
+<!-- browser preview only — the PyQt6 cockpit feeds applyFeed() via QWebChannel: -->
+<!-- <script src="demo/mock_feed.js"></script> -->
+
+</body>
+</html>
